@@ -1,0 +1,51 @@
+
+<nav class="site-header sticky-top py-1 navbar navbar-default" >
+  <div class="container d-flex flex-column flex-md-row justify-content-between">
+    <a class="py-2" href="/">
+      <img src="/image/logo.png" class="img-circle" alt="Avatar">
+    </a>
+    <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#navTabs" aria-controls="navTabs"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+     
+     <a class="py-2 d-none {{#if navHome}} active {{/if}} d-md-inline-block" href="/">Home</a>
+    <a class="py-2 d-none {{#if navProjects}} active {{/if}} d-md-inline-block" href="/projects">Projects</a>
+
+    <a class="py-2 d-none {{#if navBlog}} active {{/if}} d-md-inline-block" href="/blogs">Blog</a>
+
+    <a class="py-2 d-none d-md-inline-block " href="/resume">Resume</a>
+    
+    <a class="py-2 d-none d-md-inline-block" href="#">About</a>
+    
+    <a class="py-2 d-none {{#if navContact}} active {{/if}} d-md-inline-block" href="/contact">Contact</a>
+    
+    <a class="py-2 d-none {{#if navAdmin}} active {{/if}} d-md-inline-block" href="/login">Admin</a>
+
+    <div class="collapse navbar-collapse" id="navTabs">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/projects">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Blogs</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" href="/resume">Resume</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" href="/login">Admin</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
