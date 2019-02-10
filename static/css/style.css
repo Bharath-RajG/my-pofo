@@ -30,7 +30,7 @@
     
   }
 
-  .project-sidebar-block{
+ .project-sidebar-block{
     padding: 10px 0px;
 } 
 .project-sidebar-block h2{
@@ -40,4 +40,37 @@
 
 .project-sidebar-links{
     margin: 10px 0px;
-} 
+}
+
+.social {
+    display: flex;
+    margin-top: 1.5rem;
+    padding: 3 px;
+}
+.social li {
+    height: 2rem;
+    margin-right: 0.5rem;
+    text-align: center;
+    width: 2rem;
+    list-style: none;
+    
+}
+.social a {
+    align-items: center;
+    display: flex;
+    font-size: 1.5rem;
+    height: 2rem;
+    justify-content: center;
+    opacity: 0.5;
+    transition-property: opacity, transform;
+    width: 2rem;
+    will-change: opacity, transform;
+}
+.social a:hover {
+    opacity: 1;
+    transform: scale(1.25);
+}
+.social a:active {
+    opacity: 1;
+    transform: scale(1.1);
+}

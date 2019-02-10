@@ -30,7 +30,8 @@ app.get('/project/:projectalias', routers.projectDetail);
 
 app.get('/contact', routers.contact);
 
-app.get('/blogs', routers.blogs)
+app.get('/blogs', routers.blogs);
+app.get('/about', routers.about);
 
 app.get('/login', routers.login);
 app.post('/login', routers.doLogin);
@@ -42,6 +43,7 @@ app.post('/signup', routers.doSignup);
 
 app.get('/dashboard', routers.dashboard);
 app.get('/admin/projects', routers.adminProjectList);
+app.get('/admin/projects/:alias', routers.adminProjectDetails);
 
 app.use(appMiddle.notFoundError);
 app.use(appMiddle.handleError);

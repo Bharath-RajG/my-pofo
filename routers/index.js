@@ -47,6 +47,14 @@ module.exports.blogs = (req,res)=>{
     })
 }
 
+module.exports.about = (req,res)=>{
+    res.render('about',{
+        title: 'About',
+        layout: 'layout',
+        navAbout: true
+    })
+}
+
 module.exports.contact = (req,res)=>{
     res.render('contact',{
         layout:'layout',
@@ -114,5 +122,18 @@ module.exports.adminProjectList = (req,res)=> {
         title:'Project List',
         layout:'layout-admin',
         projects: data.myProjects
+    })
+}
+
+module.exports.adminProjectDetails = (req,res)=> {
+    let alias = req.params.alias;
+
+    let index = data.projectIndex[alias];
+    let project = data.myProjects[index];
+
+    res.render('admin/project-details',{
+        title:'Project List',
+        layout:'layout-admin',
+        project: project
     })
 }
