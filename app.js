@@ -2,7 +2,12 @@ const express = require('express');
 const hbs = require('hbs');
 const bodyparser = require('body-parser');
 const expressValidtor = require('express-validator');
-const routers = require('./routers/index')
+
+const index = require('./routers/index');
+const project = require('./routers/project');
+const blog = require('./routers/blog');
+const admin = require('./routers/admin');
+
 const appMiddle = require('./middleware/appMiddleWare.js');
 
 const app = express();
@@ -23,9 +28,12 @@ hbs.registerHelper('increment', function(value, options){
 app.use(express.static(__dirname+'/static'))
 app.use(appMiddle.logger);
 
-app.get('/', routers.index);
+app.use('/', index);
+app.use('/projects', project);
+app.use('/blogs', blog);
+app.use('/admin', admin);
 
-app.get('/projects', routers.projects)
+/*app.get('/projects', routers.projects)
 app.get('/project/:projectalias', routers.projectDetail);
 
 app.get('/contact', routers.contact);
@@ -37,14 +45,12 @@ app.get('/login', routers.login);
 app.post('/login', routers.doLogin);
 
 app.get('/signup', routers.signup);
-app.post('/signup', routers.doSignup);
+app.post('/signup', routers.doSignup);*/
 
-/*admin*/
-
-app.get('/dashboard', routers.dashboard);
+/*app.get('/dashboard', routers.dashboard);
 app.get('/admin/projects', routers.adminProjectList);
 app.get('/admin/projects/:alias', routers.adminProjectDetails);
-
+*/
 app.use(appMiddle.notFoundError);
 app.use(appMiddle.handleError);
 
