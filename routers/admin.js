@@ -15,6 +15,7 @@ router.get('/projects',(req,res)=> {
         layout:'layout-admin',
         projects: data.myProjects
     })
+   
 })
 
 router.get('/projects/:alias',(req,res)=> {

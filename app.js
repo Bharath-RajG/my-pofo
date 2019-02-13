@@ -2,6 +2,8 @@ const express = require('express');
 const hbs = require('hbs');
 const bodyparser = require('body-parser');
 const expressValidtor = require('express-validator');
+/* USE Session */
+const session = require('express-session');
 
 const index = require('./routers/index');
 const project = require('./routers/project');
@@ -14,6 +16,14 @@ const app = express();
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:false}));
+
+/* USE Session */
+app.use(session({
+    secret:'my secret',
+    resave: false,
+    saveinitilized: false,
+    cookie:{maxAge:1000000}
+}))
 
 app.use(expressValidtor());
 
@@ -28,29 +38,21 @@ hbs.registerHelper('increment', function(value, options){
 app.use(express.static(__dirname+'/static'))
 app.use(appMiddle.logger);
 
+function auth(req,res,next){
+    var loggedIn = req.session.isLoggedIn;
+    console.log(loggedIn);
+    if(loggedIn){
+        next()
+    }else{
+        res.redirect('/login')
+    }
+}
+
 app.use('/', index);
 app.use('/projects', project);
 app.use('/blogs', blog);
-app.use('/admin', admin);
+app.use('/admin', auth, admin);
 
-/*app.get('/projects', routers.projects)
-app.get('/project/:projectalias', routers.projectDetail);
-
-app.get('/contact', routers.contact);
-
-app.get('/blogs', routers.blogs);
-app.get('/about', routers.about);
-
-app.get('/login', routers.login);
-app.post('/login', routers.doLogin);
-
-app.get('/signup', routers.signup);
-app.post('/signup', routers.doSignup);*/
-
-/*app.get('/dashboard', routers.dashboard);
-app.get('/admin/projects', routers.adminProjectList);
-app.get('/admin/projects/:alias', routers.adminProjectDetails);
-*/
 app.use(appMiddle.notFoundError);
 app.use(appMiddle.handleError);
 
