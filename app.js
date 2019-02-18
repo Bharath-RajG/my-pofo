@@ -1,19 +1,22 @@
 const express = require('express');
 const hbs = require('hbs');
 const bodyparser = require('body-parser');
-const expressValidtor = require('express-validator');
+/*useing Express validator*/
+const validtor = require('express-validator');
 /* USE Session */
 const session = require('express-session');
-
+/*exporting the Modules form routers*/
 const index = require('./routers/index');
 const project = require('./routers/project');
 const blog = require('./routers/blog');
 const admin = require('./routers/admin');
-
+/*using the middleware*/
 const appMiddle = require('./middleware/appMiddleWare.js');
-
+/*express the framework*/
 const app = express();
 
+
+/*middleware.Parse incoming request bodies in a middleware before your handlers*/
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:false}));
 
@@ -21,37 +24,30 @@ app.use(bodyparser.urlencoded({extended:false}));
 app.use(session({
     secret:'my secret',
     resave: false,
-    saveinitilized: false,
+    saveUninitialized:false,
     cookie:{maxAge:1000000}
 }))
 
-app.use(expressValidtor());
+
+app.use(validtor());
 
 app.set('views',__dirname+'/views');
 app.set('view engine','hbs');
 hbs.registerPartials(__dirname+'/views/partials');
-
+/*index value increment in project details*/
 hbs.registerHelper('increment', function(value, options){
     return value+1;
 });
 
 app.use(express.static(__dirname+'/static'))
+/*middleWare*/
 app.use(appMiddle.logger);
-
-function auth(req,res,next){
-    var loggedIn = req.session.isLoggedIn;
-    console.log(loggedIn);
-    if(loggedIn){
-        next()
-    }else{
-        res.redirect('/login')
-    }
-}
+app.use(appMiddle.authenticated);
 
 app.use('/', index);
 app.use('/projects', project);
 app.use('/blogs', blog);
-app.use('/admin', auth, admin);
+app.use('/admin', appMiddle.authenticate , admin);
 
 app.use(appMiddle.notFoundError);
 app.use(appMiddle.handleError);

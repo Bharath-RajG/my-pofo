@@ -45,7 +45,7 @@
 .social {
     display: flex;
     margin-top: 1.5rem;
-    padding: 3 px;
+    padding: 1px;
 }
 .social li {
     height: 2rem;

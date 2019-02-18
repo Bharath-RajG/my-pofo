@@ -3,7 +3,6 @@ let express = require('express');
 let router = express.Router();
 
 
-
 router.get('/', (req,res)=>{
     let random = Math.floor(Math.random() * data.myBlog.length);
      let nav = data.blogCategories;
