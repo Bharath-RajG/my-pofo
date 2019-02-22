@@ -17,14 +17,31 @@ router.get('/projects', (req, res) => {
     })
 })
 
+router.get('/projects/create', (req, res) => {
+    res.render('admin/project-create', {
+        title: 'Create New Project',
+        layout: 'layout-admin'
+    })
+})
+
+router.post('/projects/create', (req, res) => {
+    let data = req.body;
+
+    console.log(data);
+    //logic to save in DB
+
+    res.redirect('/admin/projects')
+
+})
+
 router.get('/projects/:alias', (req, res) => {
+    alias = req.params.alias;
+    index = data.projectIndex[alias];
+    project = data.myProjects[index];
     res.render('admin/project-details', {
         title: 'Project List',
         layout: 'layout-admin',
         project: project,
-        alias: req.params.alias,
-        index: data.projectIndex[alias],
-        project: data.myProjects[index]
     })
 })
 
