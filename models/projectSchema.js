@@ -9,7 +9,7 @@ const projectSchema = new Schema({
     alias: String,
     tag: [String],
     description: String,
-    githubUrl: String,
+    github: String,
     imageUrl: String,
     relatedProjects:[{name: String, link: String}]
 });
