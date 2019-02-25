@@ -1,20 +1,7 @@
 let data = require('../my-data.json')
 let express = require('express');
 let router = express.Router();
-let Client = require('mongodb').MongoClient;
-
-let dbUrl = 'mongodb://localhost:27017';
-
-let db;
-
-Client.connect(dbUrl, { useNewUrlParser: true }, function (error, client) {
-    if (error) {
-        console.log(error)
-    } else {
-        console.log('Successfully Connected to DB');
-        db = client.db('mean')
-    }
-})
+const Project = require('../models/projectSchema')
 
 router.get('/dashboard', (req, res) => {
     res.render('admin/dashboard', {
@@ -23,24 +10,23 @@ router.get('/dashboard', (req, res) => {
     })
 })
 
-router.get('/projects', (req, res,next) => {
+router.get('/projects', (req, res, next) => {
+         Project.find({}, function(err, projectList){
+             if(err){
+                 next(err)
+             }else{
+                res.render('admin/project-list', {
+                    title: 'Project List',
+                    layout: 'layout-admin',
+                    projects: projectList
+                })
+            }
+            
+         })
+        })
 
-    let projectsCollection = db.collection('projects');
 
-    projectsCollection.find().toArray(function (err, projectList) {
-
-        if(err) {
-            next(err)
-        }else {
-            res.render('admin/project-list', {
-                title: 'Project List',
-                layout: 'layout-admin',
-                projects: projectList
-            })
-        }
-    })   
-})
-
+       
 router.get('/projects/create', (req,res) => {
     res.render('admin/project-create', {
         title: "Create New Project",
@@ -48,21 +34,29 @@ router.get('/projects/create', (req,res) => {
     })
 })
 
-router.post('/projects/create', (req, res) => {
+
+router.post('/projects/create', (req, res ,next) => {
     let data = req.body;
 
-    let projectCollection = db.collection('projects');
+    let alias = data.name.toLowerCase().trim().split(' ').join('-')
+    console.log(alias);
 
-    projectCollection.insertOne(data, function (err, project) {
-        if (err) {
-            console.log(err)
+    data.alias = alias;
+
+    let newProject = new Project(data);  
+  
+    newProject.save( function(err, data){
+        if(err){
             next(err)
-        } else {
-            console.log(project.toJSON())
+        }else{
             res.redirect('/admin/projects')
         }
     })
+          
+    
 })
+
+
 
 router.get('/projects/:alias', (req, res) => {
     alias = req.params.alias;
