@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <form action="" method="post">
+    <form action="/admin/projects/{{project.alias}}/update" method="post">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -25,14 +25,14 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="name">GithubUrl</label>
-                    <input type="text" class="form-control" value="{{project.githubUrl}}">
+                    <label for="github">GithubUrl</label>
+                    <input type="text" name="githubUrl" class="form-control" value="{{project.githubUrl}}">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="name">Tag</label>
-                    <input type="text" class="form-control" value="{{#each project.tags}}{{this.name}},{{/each}}">
+                    <label for="tag">Tag</label>
+                    <input type="text" name="tags"class="form-control" value="{{#each project.tags}}{{this.name}},{{/each}}">
                 </div>
             </div>
             <div class="col-md-6">
@@ -42,14 +42,14 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+           <div class="col-md-6">
                 <div class="form-group">
                     <label for="name">Image</label>
-                    {{#if project.image}}
-                        <img src="{{project.image}}" alt="">
+                    {{#if project.imageUrl}}
+                        <img src="{{project.imageUrl}}" height="100" width="100" alt="">
                     {{else}}
 
-                    <input type="file" class="form-control" value=""></input>
+                    <a href="/admin/projects/{{project.alias}}/image-upload">Upload Image</a>
                     {{/if}}
                 </div>
             </div>
@@ -59,3 +59,5 @@
 
     </form>
 </main>
+
+

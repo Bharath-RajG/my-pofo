@@ -7,9 +7,9 @@ const Schema = mongoose.Schema;
 const projectSchema = new Schema({
     name: String,
     alias: String,
-    tag: [String],
+    tags: [String],
     description: String,
-    github: String,
+    githubUrl: String,
     imageUrl: String,
     relatedProjects:[{name: String, link: String}]
 });

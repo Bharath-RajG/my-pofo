@@ -2,6 +2,20 @@ let data = require('../my-data.json')
 let express = require('express');
 let router = express.Router();
 const Project = require('../models/projectSchema')
+const multer = require('multer');
+const path = require('path')
+
+let storage = multer.diskStorage({
+    destination: function(req,file,cb) {
+        cb(null, path.join(__dirname, '../static/image/projects'))
+    },
+    filename: function(req,file,cb) {
+        cb(null, file.originalname)
+    } 
+})
+
+
+const upload = multer({storage:storage})
 
 router.get('/dashboard', (req, res) => {
     res.render('admin/dashboard', {
@@ -10,20 +24,15 @@ router.get('/dashboard', (req, res) => {
     })
 })
 
-router.get('/projects', (req, res, next) => {
-         Project.find({}, function(err, projectList){
-             if(err){
-                 next(err)
-             }else{
-                res.render('admin/project-list', {
-                    title: 'Project List',
-                    layout: 'layout-admin',
-                    projects: projectList
-                })
-            }
-            
+router.get('/projects', (req, res, next) => {   
+    Project.find().then(projectList => {
+         res.render('admin/project-list', {
+             title: 'Project List',
+             layout: 'layout-admin',
+             projects: projectList
          })
-        })
+    }).catch(err => next(err))
+ })
 
 
        
@@ -35,38 +44,78 @@ router.get('/projects/create', (req,res) => {
 })
 
 
-router.post('/projects/create', (req, res ,next) => {
+router.post('/projects/create', (req, res, next) => {
     let data = req.body;
 
     let alias = data.name.toLowerCase().trim().split(' ').join('-')
-    console.log(alias);
-
+    console.log(alias)
     data.alias = alias;
 
-    let newProject = new Project(data);  
-  
-    newProject.save( function(err, data){
-        if(err){
-            next(err)
-        }else{
-            res.redirect('/admin/projects')
-        }
-    })
-          
+    let newProject = new Project(data);
     
+    newProject.save().then(projectSaved => {
+        res.redirect('/admin/projects')
+    }).catch(err => next(err))
 })
-
-
 
 router.get('/projects/:alias', (req, res) => {
-    alias = req.params.alias;
-    index = data.projectIndex[alias];
-    project = data.myProjects[index];
-    res.render('admin/project-details', {
-        title: 'Project List',
-        layout: 'layout-admin',
-        project: project,
+    let alias = req.params.alias;
+    
+    Project.findOne({alias: alias}).then(data => {
+        res.render('admin/project-details', {
+            title: 'Project Detail',
+            layout: 'layout-admin',
+            project: data
+        })
+    }).catch(err => next(err))
+})
+
+
+router.get('/projects/:alias/delete', (req,res) => {
+    let alias = req.params.alias;
+
+    Project.findOneAndDelete({alias: alias}).then(data => {
+        console.log(data)
+        res.redirect('/admin/projects')
+    }).catch(err => next(err))
+})
+
+router.post('/projects/:alias/update', (req,res) => {
+    let bodyData = req.body;
+
+    console.log(bodyData)
+    let alias = req.params.alias;
+
+    Project.findOneAndUpdate({alias:alias}, {$set:bodyData, $inc:{__v:1}}, {new:true}).then(data =>{
+        console.log(data)
+        res.redirect('/admin/projects')
+    }).catch(err => next(err))
+})
+
+
+router.get('/projects/:alias/image-upload', (req,res) => {
+    let alias = req.params.alias
+    res.render('admin/upload', {
+        title:'Upload',
+        layout:'layout-admin',
+        actionUrl:'/admin/projects/'+alias+'/image-upload'
     })
 })
+
+router.post('/projects/:alias/image-upload', upload.single('upload'), (req,res,next) =>{
+    
+    let file = req.file;
+    console.log(file);
+    
+    Project.findOneAndUpdate({alias:req.params.alias}, {$set:{imageUrl: `/image/projects/${file.originalname}`}}, {new:true}).then(data => {
+        console.log(data)
+        res.redirect('/admin/projects')
+
+    }).catch(err => next(err))
+   
+})
+
+router.post('')
+
 
 module.exports = router;

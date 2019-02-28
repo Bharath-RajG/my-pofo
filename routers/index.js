@@ -4,8 +4,8 @@ let router = express.Router();
 
 router.get('/', (req, res, next) => {
     res.render('index', {
-        layout: 'layout',
-        title: 'Album Page',
+        layout: 'layout-index',
+        title: 'Portfolio',
         navHome: true
     })
 })
