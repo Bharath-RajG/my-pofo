@@ -65,4 +65,4 @@ app.use('/admin', appMiddle.authenticate, admin);
 app.use(appMiddle.notFoundError);
 app.use(appMiddle.handleError);
 
-app.listen(3002, () => console.log('Server started on port 3002'));
+app.listen(3000, () => console.log('Server started on port 3000'));

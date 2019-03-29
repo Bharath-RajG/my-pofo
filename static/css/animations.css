@@ -107,11 +107,11 @@ animation-timing-function: cubic-bezier(0, 0.5, 0.25, 1.25);
     .picture.is-loaded .picture-image {
     animation-name: picImage;
     }
-    .wallpaper,
+    /* .wallpaper,
 .picture-shadow,
 .picture-image {
 opacity: 0;
-}
+} */
 
     .name {
     animation-name: slideDown;

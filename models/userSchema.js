@@ -5,7 +5,7 @@ let userSchema = new Schema({
     name: String,
     email :{type:String, required:true, unique:true},
     password: {type: String},
-    mobile: Number,
+    mobile: {type: Number},
     createdOn: {type:Date, default:Date.now()}
 })
 

@@ -1,12 +1,15 @@
 let data = require('../my-data.json')
 let express = require('express');
 let router = express.Router();
+let userService = require('../service/userService')
+let contactService = require('../service/contactService')
 
 router.get('/', (req, res, next) => {
     res.render('index', {
         layout: 'layout-index',
         title: 'Portfolio',
-        navHome: true
+        navHome: true,
+        indexCss:  '<link rel="stylesheet" type="text/css" href="css/main.css">', 
     })
 })
 
@@ -19,12 +22,35 @@ router.get('/about', (req, res) => {
 })
 
 router.get('/contact', (req, res) => {
+    
     res.render('contact', {
         layout: 'layout',
         title: 'Contact Page',
         navContact: true
     })
 })
+
+router.post('/contact', (req, res, next) => {
+    
+
+
+    let data = req.body;
+
+    function contactCreate(err,data) {
+        if(err) {
+            next(err)
+        }else {
+            res.redirect('/projects')
+        }
+    }
+
+    contactService.createContact(data, contactCreate)
+
+
+   
+})
+
+
 
 router.get('/login', (req, res) => {
     res.render('login', {
@@ -76,7 +102,7 @@ router.post('/login', (req, res) => {
                     title:'Login',
                     layout:'layout-signin',
                     extraCss:'<link rel="stylesheet" href="/css/signin.css">',
-                    messages: msgs
+                    messages: data
                 });
             }else {
                 req.session.isLoggedIn = true;

@@ -6,9 +6,7 @@ let projectService = require('../service/projectService')
 
 
 router.get('/', (req, res, next) => {
-    let projects = data.myProjects;
-
-    
+       
     function publicProjectList (err, data) {
         if(err) {
             next(err)

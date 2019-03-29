@@ -29,13 +29,22 @@ router.get('/dashboard', (req, res) => {
 })
 
 router.get('/projects', (req, res, next) => {
-    Project.find().then(projectList => {
-        res.render('admin/project-list', {
-            title: 'Project List',
-            layout: 'layout-admin',
-            projects: projectList
-        })
-    }).catch(err => next(err))
+    function renderProjectList (err, data) {
+        if(err) {
+            next(err)
+        }else {
+            res.render('admin/project-list', {
+                title: 'Project List',
+                layout: 'layout-admin',
+                projects: data
+            })
+        }
+    }
+
+
+   projectService.getProjectList(renderProjectList)
+
+
 })
 
 
@@ -51,29 +60,38 @@ router.get('/projects/create', (req, res) => {
 router.post('/projects/create', (req, res, next) => {
     let data = req.body;
 
-    let alias = data.name.toLowerCase().trim().split(' ').join('-')
-    console.log(alias)
-    data.alias = alias;
+    function projectCreate(err,data) {
+        if(err) {
+            next(err)
+        }else {
+            res.redirect('/admin/projects')
+        }
+    }
 
-    let newProject = new Project(data);
+    projectService.createProject(data, projectCreate)
 
-    newProject.save().then(projectSaved => {
-        res.redirect('/admin/projects')
-    }).catch(err => next(err))
+
 })
+
 
 router.get('/projects/:alias', (req, res) => {
     let alias = req.params.alias;
+    let data = req.body;
 
-    Project.findOne({ alias: alias }).then(data => {
-        res.render('admin/project-details', {
-            title: 'Project Detail',
-            layout: 'layout-admin',
-            project: data
-        })
-    }).catch(err => next(err))
+    function renderProjectDetail (err, data) {
+        if(err) {
+            next(err)
+        }else {
+            res.render('admin/project-details', {
+                title: 'Project Detail',
+                layout: 'layout-admin',
+                project: data
+            })
+        }
+    }
+
+    projectService.getSingleProject(alias, renderProjectDetail)
 })
-
 
 router.get('/projects/:alias/delete', (req, res) => {
     let alias = req.params.alias;
