@@ -4,8 +4,8 @@ let router = express.Router();
 
 router.get('/', (req, res, next) => {
     res.render('index', {
-        layout: 'layout',
-        title: 'Album Page',
+        layout: 'layout-index',
+        title: 'Portfolio',
         navHome: true
     })
 })
@@ -66,50 +66,30 @@ router.post('/login', (req, res) => {
             extraCss: '<link rel="stylesheet" href="/css/signin.css">',
             messages: msgs
         });
-    } else {
-        /* here useing the 2 validaate users */
+    }else {
         let data = req.body;
-        let foundUser = users.filter(user => data.email == user.email && data.password == user.password)
-        if (foundUser.length > 0) {
-
-            req.session.isLoggedIn = true;
-            req.session.user = foundUser[0];
-            res.redirect('/admin/dashboard')
-
-        } else {
-            res.render('login', {
-                title: 'Login',
-                layout: 'layout-signin',
-                extraCss: '<link rel="stylesheet" href="/css/signin.css">',
-                messages: ['Email or Password Wrong']
-            });
+       
+        
+        function userLogin (err ,data) {
+            if(err) {
+                res.render('login', {
+                    title:'Login',
+                    layout:'layout-signin',
+                    extraCss:'<link rel="stylesheet" href="/css/signin.css">',
+                    messages: msgs
+                });
+            }else {
+                req.session.isLoggedIn = true;
+                req.session.user = data
+                res.redirect('/admin/dashboard')
+            }
         }
-        /*
-                req.session.user = user;
-                var foundUser;
-                for(var i=0;i < user.length;i++)
-                {
-                    if (user[i].email == data.email && user[i].password == data.password) {
-                        foundUser = user[i]
-                    }
-                }
-                
-                //console.log('foundUser:',foundUser)
-                if (foundUser) {
-                   
-                    req.session.isLoggedIn = true;
-                     req.session.user = foundUser[0];
-                    res.redirect('/admin/dashboard');
-                } else {
-                    res.render('login', {
-                        layout: 'layout-signin',
-                        title: 'Login Page',
-                        extraCss: '<link rel="stylesheet" href="/css/signin.css">',
-                        messages: ['Email or Password is wrong']
-                    });
-         }*/
+
+        userService.login(data, userLogin)
+
     }
 })
+
 
 router.get('/logout', (req, res) => {
     req.session.isLoggedIn = false;
@@ -126,9 +106,16 @@ router.get('/signup', (req, res) => {
 })
 
 router.post('/signup', (req, res) => {
-    var data = req.body;
-    //console.log(data);
-    res.redirect('/login');
+    let data = req.body;
+    
+    function signIn (err, data) {
+        if(err) {
+            next(err)
+        }else {
+            res.redirect('/login')
+        }
+    }
+    userService.create(data, signIn)
 })
 
 module.exports = router;

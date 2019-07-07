@@ -15,6 +15,19 @@ const appMiddle = require('./middleware/appMiddleWare.js');
 /*express the framework*/
 const app = express();
 
+//mongoose
+
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/mean',{
+    useNewUrlParser: true}, function(err, data){
+        if(err){
+            console.log(err)
+        }else{
+            console.log('DB Connection Successfull')
+        }        
+})
+
 
 /*middleware.Parse incoming request bodies in a middleware before your handlers*/
 app.use(bodyparser.json());
